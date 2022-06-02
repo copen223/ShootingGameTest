@@ -7,6 +7,7 @@ namespace ShootModule.Gun
     {
         //----------数值-----------
         public float BasedDamage;
+        public float Recoil;
         
         //----------链接-----------
         [SerializeField]protected List<Ammo> ammoList = new List<Ammo>();

@@ -112,6 +112,16 @@ namespace ActorModule
             moveSpeedMultiply = multiply;
         }
 
+        public void ChangeYSpeed(float multiply)
+        {
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.y * multiply);
+        }
+        
+        /// <summary>
+        /// 开始横向移动
+        /// 根据方向设置目标速度和起始速度
+        /// </summary>
+        /// <param name="directionIsRight"></param>
         public void StartWalk(int directionIsRight)
         {
             float velocityX = directionIsRight * MoveSpeed_Final;
@@ -132,7 +142,6 @@ namespace ActorModule
         {
             moveTimer += Time.deltaTime;
             
-            var velecity = rigidbody.velocity;
             float t = Mathf.Abs(moveTimer / moveTime);
             t = t > 1 ? 1 : t;
             

@@ -29,22 +29,22 @@ public class CameraController : MonoBehaviour
         }
         targetPosition = target.transform.position + offset + offset_Direction * distanceOfDirection;
 
-        var position = transform.position;
-        Vector2 direction = targetPosition - position;
-        Vector2 moveVector = direction.normalized * speed * Time.deltaTime;
+        var curPos = transform.position;
+        Vector2 direction = targetPosition - curPos;
+        Vector2 moveVector = direction.normalized * speed * Time.deltaTime; // 一帧移动的距离
         
-        var curTargetPos = (Vector2)position + moveVector;
-        float disX = Mathf.Abs(transform.position.x - targetPosition.x);
-        float disY = Mathf.Abs(transform.position.y - targetPosition.y);
+        float disX = Mathf.Abs(curPos.x - targetPosition.x);
+        float disY = Mathf.Abs(curPos.y - targetPosition.y);
+
+        float finalX = disX > Mathf.Epsilon? Mathf.Lerp(curPos.x, targetPosition.x, Mathf.Abs(moveVector.x) / disX)
+            : targetPosition.x;
+        float finalY = disY > Mathf.Epsilon? Mathf.Lerp(curPos.y, targetPosition.y, Mathf.Abs(moveVector.y) / disY)
+            : targetPosition.y;
         
-        transform.position = new Vector3(curTargetPos.x, curTargetPos.y, targetPosition.z);
-        if (disX < minDistanceToZero)
+        transform.position = new Vector3(finalX, finalY, targetPosition.z);
+        /*if (disX < moveVector.x)
             transform.position = new Vector3(targetPosition.x, curTargetPos.y, targetPosition.z);
-        if (disY < minDistanceToZero)
-            transform.position = new Vector3(curTargetPos.x, targetPosition.y, targetPosition.z);
-
-        test = disX;
-
-
+        if (disY < moveVector.y)
+            transform.position = new Vector3(curTargetPos.x, targetPosition.y, targetPosition.z);*/
     }
 }

@@ -18,8 +18,14 @@ namespace ActorModule.Monster
                 i++;
                 
                 // 产生伤害文字
+                // 命中部位受击粒子反馈
+                // 闪烁
+                beHitPoint.FlashOnBehit();
+                
                 damage += damage_Point;
             }
+            
+            
 
             healPoint -= damage;
             healPoint = healPoint <= 0 ? 0 : healPoint;

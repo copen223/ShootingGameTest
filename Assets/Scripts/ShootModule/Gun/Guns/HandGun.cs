@@ -15,6 +15,8 @@ namespace ShootModule.Gun.Guns
         private float jitterTime_CurReset;  // 随机计算后的当前晃动角度重置值
         private int ifJitterUp = 1;
         private Vector2 curShootDir;
+
+        [SerializeField] private GunSprite sprite;
         
         protected override void Init()
         {
@@ -44,14 +46,14 @@ namespace ShootModule.Gun.Guns
             var laserStartPoint = transform.position;
             Vector3 referenceDirection = worldPosition - (Vector2)laserStartPoint;
             Vector2 laserDir = (Quaternion.Euler(0, 0, curJitterAngle) * referenceDirection);
-            Vector2 laserEndPoint = laserStartPoint + (Vector3) laserDir * 20f;
-
+            Vector2 laserEndPoint = laserStartPoint + (Vector3) laserDir.normalized * 20f;
             laserSights.positionCount = 2;
             laserSights.SetPositions(new Vector3[]{laserStartPoint,laserEndPoint});
             laserSights.gameObject.SetActive(true);
 
             curShootDir = laserDir;
-
+            
+            sprite.SetPositionAndRotationByAim(transform.position,laserDir.normalized);
         }
 
         public override void AimJitterReset()
@@ -79,6 +81,7 @@ namespace ShootModule.Gun.Guns
         {
             laserSights.positionCount = 0;
             laserSights.gameObject.SetActive(false);
+            sprite.ResetPositionIdle();
         }
     }
 }

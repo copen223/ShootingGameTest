@@ -34,7 +34,15 @@ namespace ShootModule.Gun.Bullets
         public override void ShootTo(Vector2 direction)
         {
             rigidbody.AddForce(direction.normalized * shootImpulse,ForceMode2D.Impulse);
+            sprite.SetRotationByDir(direction);
         }
-        
+
+        private void OnTriggerEnter2D(Collider2D col)
+        {
+            if (col.CompareTag("Ground"))
+            {
+                OnEndUsing();
+            }
+        }
     }
 }

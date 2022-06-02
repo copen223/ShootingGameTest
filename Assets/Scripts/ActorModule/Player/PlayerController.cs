@@ -15,7 +15,19 @@ namespace ActorModule.Player
         private Camera mainCamera;
         
         //----------参数--------------
-        public Vector2 ViewDirection;   // 视角
+        public Vector2 ViewDirection
+        {
+            get => viewDirection;
+            private set
+            {
+                viewDirection = value;
+                
+                int scaleX = ViewDirection.x > 0 ? 1 : -1;
+                transform.localScale = new Vector3(scaleX, 1, 1);
+            }
+        }
+
+        private Vector2 viewDirection;// 视角
 
         //-----------时序------------
         private void Start()
@@ -55,39 +67,39 @@ namespace ActorModule.Player
                     if (lastMoveToRight != 0)
                     {
                         moveComponent.StartWalk(-lastMoveToRight);
-                        var scale = transform.localScale;
-                        var scalX = scale.x;
-                        transform.localScale = new Vector3(-scalX, 1, 1);
+                        if (currentState != PlayerState.Aim)
+                            viewDirection = Vector2.right * (-lastMoveToRight);
                     }
                     
                     moveComponent.Walk();
                     lastMoveToRight = 0;
-                    ViewDirection = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
-                    
                     return;
                 }
-                moveComponent.StopWalk();
+                
+                if(lastMoveToRight !=0 )
+                    moveComponent.StopWalk();
                 moveComponent.Walk();
                 lastMoveToRight = 0;
-                ViewDirection = Vector2.zero;
             }
             else
             {
                 if (lastMoveToRight != moveToRight)
                 {
                     moveComponent.StartWalk(moveToRight);
-                    transform.localScale = new Vector3(moveToRight, 1, 1);
+                    if(currentState!= PlayerState.Aim)
+                        ViewDirection = new Vector2(moveToRight, 0);
                 }
 
                 moveComponent.Walk();
+                if(currentState!= PlayerState.Aim)
+                    ViewDirection = new Vector2(moveToRight, 0);
                 lastMoveToRight = moveToRight;
-                ViewDirection = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
             }
         }
 
         private void MoveVertically()
         {
-            if (Input.GetKeyDown(KeyCode.Space)||Input.GetKeyUp(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space))
             {
                 if (moveComponent.IfWillStand)
                     ifWillJump = true;
@@ -98,7 +110,15 @@ namespace ActorModule.Player
                     return;
                 }
             }
-
+            
+            if (!moveComponent.IfStanding && (moveComponent.Velocity.y > 0))
+            {
+                if(Input.GetKeyUp(KeyCode.Space))
+                {
+                    moveComponent.ChangeYSpeed(0.7f);
+                }
+            }
+            
             if (ifWillJump && moveComponent.IfStanding)
             {
                 moveComponent.Jump();
@@ -142,9 +162,12 @@ namespace ActorModule.Player
             MoveHorizontally();
             
             // jump->idle
-            if (moveComponent.IfStanding)
+            if (moveComponent.IfStanding && moveComponent.Velocity.y <= Mathf.Epsilon)
             {
-                ChangeStateTo(PlayerState.Idle);
+                if(Mathf.Abs(rigidbody.velocity.x) > Mathf.Epsilon)
+                    ChangeStateTo(PlayerState.Walk);
+                else
+                    ChangeStateTo(PlayerState.Idle);
             }
             // jump->aim
             if (Input.GetKeyDown(KeyCode.Mouse1))
@@ -183,7 +206,6 @@ namespace ActorModule.Player
             
             // 减速
             moveComponent.Walk();
-            ViewDirection = Vector2.zero;
             lastMoveToRight = 0;
         }
 
@@ -202,18 +224,28 @@ namespace ActorModule.Player
 
             // 瞄准
             Vector3 mousePosWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            bool ifAimingRight = (mousePosWorld - transform.position).x > 0;
             gun.AimTo(mousePosWorld);
-
+            
             // 射击
             if (Input.GetKeyDown(KeyCode.Mouse0))
+            {
                 gun.Shoot();
+                float recoil = gun.Recoil;
+                Vector2 force = ifAimingRight ? recoil * Vector2.left : recoil * Vector2.right;
+                
+                // 后坐力
+                rigidbody.AddForce(force, ForceMode2D.Impulse);
+                moveComponent.StopWalk();
+                lastMoveToRight = 0;
+            }
+            
+            // 瞄准带来的视角
+            ViewDirection = (mousePosWorld - transform.position).x > 0? Vector2.right : Vector2.left;
             
             // 移动
             MoveHorizontally();
             MoveVertically();
-            
-            // 瞄准带来的视角
-            ViewDirection = (mousePosWorld - transform.position).x>0? Vector2.right : Vector2.left;
         }
         
         //--------------UpdateEnd---------------

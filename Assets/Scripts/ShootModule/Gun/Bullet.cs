@@ -9,6 +9,7 @@ namespace ShootModule.Gun
         public float Damage;
         public DamageInfo.ElementType DamageType;
         protected Gun gun;
+        [SerializeField] protected BulletSprite sprite;
         
         public abstract void ShootTo(Vector2 direction);
         public abstract void Init(Gun _gun);
