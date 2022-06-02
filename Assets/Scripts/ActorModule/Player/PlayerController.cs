@@ -13,7 +13,7 @@ namespace ActorModule.Player
         [SerializeField] private PlayerMono playerMono;
         [SerializeField] private Gun gun;
         private Camera mainCamera;
-        
+
         //-----------时序------------
         private void Start()
         {
@@ -36,54 +36,160 @@ namespace ActorModule.Player
 
         //--------------Update---------------
         private int lastMoveToRight;
-        private void PlayerWalkUpate()
+        private int moveToRight;
+        /// <summary>
+        /// 根据输入进行横向移动
+        /// </summary>
+        private void MoveHorizontally()
         {
-            int moveToRight = 0;
+            moveToRight = 0;
             moveToRight += Input.GetKey(KeyCode.D) ? 1 : 0;
             moveToRight += Input.GetKey(KeyCode.A) ? -1 : 0;
-            
             if (moveToRight == 0)
             {
                 if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.D))
                 {
-                    moveComponent.Walk(-lastMoveToRight);
+                    if (lastMoveToRight != 0)
+                    {
+                        moveComponent.StartWalk(-lastMoveToRight);
+                    }
+                    moveComponent.Walk();
+                    lastMoveToRight = 0;
                     return;
                 }
-                ChangeStateTo(PlayerState.Idle);
+                moveComponent.StopWalk();
             }
             else
             {
-                moveComponent.Walk(moveToRight);
+                if (lastMoveToRight != moveToRight)
+                {
+                    moveComponent.StartWalk(moveToRight);
+                }
+
+                moveComponent.Walk();
+
                 lastMoveToRight = moveToRight;
+            }
+        }
+
+        private void MoveVertically()
+        {
+            if (moveComponent.Velocity.y <= 0)
+            {
+                if (Input.GetKeyDown(KeyCode.Space) && (moveComponent.IfWillStand ||moveComponent.IfStanding))
+                {
+                    ifWillJump = true;
+                    return;
+                }
+
+                if (moveComponent.IfStanding)
+                {
+                    if (ifWillJump)
+                    {
+                        moveComponent.Jump();
+                        ifWillJump = false;
+                        return;
+                    }
+                    ifWillJump = false;
+                }
+            }
+        }
+        
+        private void PlayerWalkUpdate()
+        {
+            // walk->jump
+            if (Input.GetKeyDown(KeyCode.Space) && moveComponent.IfStanding)
+            {
+                ChangeStateTo(PlayerState.Jump);
+                return;
+            }
+            
+            // walk->Aim
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                ChangeStateTo(PlayerState.Aim);
+                return;
+            }
+
+            // walk->idle
+            if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D))
+            {
+                ChangeStateTo(PlayerState.Idle);
+                return;
+            }
+
+            // move
+            MoveHorizontally();
+        }
+        
+        bool ifWillJump = false;
+        private void PlayerJumpUpdate()
+        {
+            MoveVertically();
+            MoveHorizontally();
+            
+            // jump->idle
+            if (moveComponent.IfStanding)
+            {
+                ChangeStateTo(PlayerState.Idle);
             }
         }
 
         private void PlayerIdleUpdate()
         {
+            
             // Idle->Aim
-            if(Input.GetKeyDown(KeyCode.Mouse1))
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
                 ChangeStateTo(PlayerState.Aim);
+                return;
+            }
+            
+            // Idle->jump
+            if (Input.GetKeyDown(KeyCode.Space) && moveComponent.IfStanding)
+            {
+                ChangeStateTo(PlayerState.Jump);
+                return;
+            }
+
             // Idle->Move
-            int moveToRight = 0;
+            moveToRight = 0;
             moveToRight += Input.GetKey(KeyCode.D) ? 1 : 0;
             moveToRight += Input.GetKey(KeyCode.A) ? -1 : 0;
             
             if (moveToRight != 0)
+            {
                 ChangeStateTo(PlayerState.Walk);
+                return;
+            }
+            
+            // 减速
+            moveComponent.Walk();
         }
 
-        private void PlayerAimUpate()
+        private void PlayerAimUpdate()
         {
-            // aim->Idle
-            if(Input.GetKeyUp(KeyCode.Mouse1))
+            // aim->Idle; aim->Jump
+            if (Input.GetKeyUp(KeyCode.Mouse1))
+            {
+                gun.StopAiming();
+                moveComponent.ChangeMoveSpeedMultiply(1f);
+                
                 ChangeStateTo(PlayerState.Idle);
-            
+                return;
+            }
+
+
             // 瞄准
             gun.AimTo(mainCamera.ScreenToWorldPoint(Input.mousePosition));
             
             // 射击
             if (Input.GetKeyDown(KeyCode.Mouse0))
                 gun.Shoot();
+            
+            // 移动
+            MoveHorizontally();
+            MoveVertically();
         }
         
         //--------------UpdateEnd---------------
@@ -96,12 +202,13 @@ namespace ActorModule.Player
                     PlayerIdleUpdate();
                     break;
                 case PlayerState.Jump:
+                    PlayerJumpUpdate();
                     break;
                 case PlayerState.Walk:
-                    PlayerWalkUpate();
+                    PlayerWalkUpdate();
                     break;
                 case PlayerState.Aim:
-                    PlayerAimUpate();
+                    PlayerAimUpdate();
                     break;
             }
             
@@ -115,10 +222,13 @@ namespace ActorModule.Player
                     moveComponent.StopWalk();
                     break;
                 case PlayerState.Jump:
+                    moveComponent.Jump();
                     break;
                 case PlayerState.Walk:
+                    moveComponent.StartWalk(moveToRight);
                     break;
                 case PlayerState.Aim:
+                    moveComponent.ChangeMoveSpeedMultiply(playerMono.SpeedMultiply_Aiming);
                     gun.AimJitterReset();
                     break;
             }
@@ -126,8 +236,8 @@ namespace ActorModule.Player
         
         private void ChangeStateTo(PlayerState targetState)
         {
-            if (currentState == targetState)
-                return;
+            /*if (currentState == targetState)
+                return;*/
 
             currentState = targetState;
             OnStateChangeToEvent?.Invoke(targetState);

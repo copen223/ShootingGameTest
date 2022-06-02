@@ -16,5 +16,6 @@ namespace ShootModule.Gun
         public abstract void AimTo(Vector2 targetWorldPosition);
         public abstract void AimJitterReset();
         public abstract void Shoot();
+        public abstract void StopAiming();
     }
 }

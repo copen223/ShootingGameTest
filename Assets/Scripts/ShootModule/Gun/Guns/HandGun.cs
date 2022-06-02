@@ -48,6 +48,7 @@ namespace ShootModule.Gun.Guns
 
             laserSights.positionCount = 2;
             laserSights.SetPositions(new Vector3[]{laserStartPoint,laserEndPoint});
+            laserSights.gameObject.SetActive(true);
 
             curShootDir = laserDir;
 
@@ -71,6 +72,12 @@ namespace ShootModule.Gun.Guns
             var bullet = curAmmo.GetBullet();
             bullet.transform.position = transform.position;
             bullet.ShootTo(curShootDir);
+        }
+
+        public override void StopAiming()
+        {
+            laserSights.positionCount = 0;
+            laserSights.gameObject.SetActive(false);
         }
     }
 }
