@@ -70,6 +70,7 @@ namespace ShootModule.Gun.Guns
 
             var curAmmo = ammoList[0];
             var bullet = curAmmo.GetBullet();
+            bullet.Init(this);
             bullet.transform.position = transform.position;
             bullet.ShootTo(curShootDir);
         }

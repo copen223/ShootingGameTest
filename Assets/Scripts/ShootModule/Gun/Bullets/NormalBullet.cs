@@ -1,4 +1,5 @@
 ﻿using System;
+using ShootModule.Gun.Guns;
 using UnityEngine;
 
 namespace ShootModule.Gun.Bullets
@@ -18,6 +19,12 @@ namespace ShootModule.Gun.Bullets
                OnEndUsing();
         }
 
+        public override void Init(Gun _gun)
+        {
+            gun = _gun;
+            Damage = gun.BasedDamage;
+        }
+
         public override void OnReset()
         {
             time_Existence = 0;
@@ -28,5 +35,6 @@ namespace ShootModule.Gun.Bullets
         {
             rigidbody.AddForce(direction.normalized * shootImpulse,ForceMode2D.Impulse);
         }
+        
     }
 }

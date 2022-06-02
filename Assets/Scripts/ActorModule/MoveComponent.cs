@@ -24,6 +24,7 @@ namespace ActorModule
         
         //--------站立检测--------
         [SerializeField] private Vector2 StandBox = new Vector2(1.2f,0.5f);
+        [SerializeField] private Vector2 WillStandBox = new Vector2(1.2f,0.5f);
         [SerializeField] private float StandDis = 1f;
         [SerializeField] private float WillStandDis = 1.2f;
         
@@ -78,7 +79,7 @@ namespace ActorModule
         /// </summary>
         private void CheckIfWillStand()
         {
-            var hits = Physics2D.BoxCastAll(transform.position, StandBox,
+            var hits = Physics2D.BoxCastAll(transform.position, WillStandBox,
                 0, Vector2.down, WillStandDis);
             foreach (var hit in hits)
             {
@@ -136,7 +137,7 @@ namespace ActorModule
             t = t > 1 ? 1 : t;
             
             float velX = Mathf.Lerp(startVelocity_X, targetVelocity_X, Mathf.Sin(t * 90f * Mathf.Deg2Rad));
-            rigidbody.velocity = new Vector2(velX, velecity.y);
+            rigidbody.velocity = new Vector2(velX, rigidbody.velocity.y);
         }
 
         public async void StopWalk()
@@ -175,7 +176,7 @@ namespace ActorModule
             
             Gizmos.color = Color.green;
             Vector2 pos2 = (Vector2) transform.position + Vector2.down * WillStandDis;
-            Gizmos.DrawWireCube(pos2,StandBox);
+            Gizmos.DrawWireCube(pos2,WillStandBox);
         }
     }
 }

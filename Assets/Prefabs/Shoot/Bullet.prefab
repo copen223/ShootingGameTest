@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rigidbody: {fileID: 3238853541271694439}
   shootImpulse: 50
-  maxTime_Existence: 3
+  maxTime_Existence: 2
 --- !u!50 &3238853541271694439
 Rigidbody2D:
   serializedVersion: 4

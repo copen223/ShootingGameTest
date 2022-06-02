@@ -5,6 +5,9 @@ namespace ShootModule.Gun
 {
     public abstract class Gun : MonoBehaviour
     {
+        //----------数值-----------
+        public float BasedDamage;
+        
         //----------链接-----------
         [SerializeField]protected List<Ammo> ammoList = new List<Ammo>();
         protected Ammo selectedAmmo;

@@ -13,6 +13,9 @@ namespace ActorModule.Player
         [SerializeField] private PlayerMono playerMono;
         [SerializeField] private Gun gun;
         private Camera mainCamera;
+        
+        //----------参数--------------
+        public Vector2 ViewDirection;   // 视角
 
         //-----------时序------------
         private void Start()
@@ -52,53 +55,63 @@ namespace ActorModule.Player
                     if (lastMoveToRight != 0)
                     {
                         moveComponent.StartWalk(-lastMoveToRight);
+                        var scale = transform.localScale;
+                        var scalX = scale.x;
+                        transform.localScale = new Vector3(-scalX, 1, 1);
                     }
+                    
                     moveComponent.Walk();
                     lastMoveToRight = 0;
+                    ViewDirection = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
+                    
                     return;
                 }
                 moveComponent.StopWalk();
+                moveComponent.Walk();
+                lastMoveToRight = 0;
+                ViewDirection = Vector2.zero;
             }
             else
             {
                 if (lastMoveToRight != moveToRight)
                 {
                     moveComponent.StartWalk(moveToRight);
+                    transform.localScale = new Vector3(moveToRight, 1, 1);
                 }
 
                 moveComponent.Walk();
-
                 lastMoveToRight = moveToRight;
+                ViewDirection = transform.localScale.x > 0 ? Vector2.right : Vector2.left;
             }
         }
 
         private void MoveVertically()
         {
-            if (moveComponent.Velocity.y <= 0)
+            if (Input.GetKeyDown(KeyCode.Space)||Input.GetKeyUp(KeyCode.Space))
             {
-                if (Input.GetKeyDown(KeyCode.Space) && (moveComponent.IfWillStand ||moveComponent.IfStanding))
-                {
+                if (moveComponent.IfWillStand)
                     ifWillJump = true;
-                    return;
-                }
-
                 if (moveComponent.IfStanding)
                 {
-                    if (ifWillJump)
-                    {
-                        moveComponent.Jump();
-                        ifWillJump = false;
-                        return;
-                    }
+                    moveComponent.Jump();
                     ifWillJump = false;
+                    return;
                 }
             }
+
+            if (ifWillJump && moveComponent.IfStanding)
+            {
+                moveComponent.Jump();
+                ifWillJump = false;
+                return;
+            }
+
         }
         
         private void PlayerWalkUpdate()
         {
             // walk->jump
-            if (Input.GetKeyDown(KeyCode.Space) && moveComponent.IfStanding)
+            if ((Input.GetKeyDown(KeyCode.Space)||Input.GetKeyUp(KeyCode.Space)) && moveComponent.IfStanding)
             {
                 ChangeStateTo(PlayerState.Jump);
                 return;
@@ -133,6 +146,11 @@ namespace ActorModule.Player
             {
                 ChangeStateTo(PlayerState.Idle);
             }
+            // jump->aim
+            if (Input.GetKeyDown(KeyCode.Mouse1))
+            {
+                ChangeStateTo(PlayerState.Aim);
+            }
         }
 
         private void PlayerIdleUpdate()
@@ -146,7 +164,7 @@ namespace ActorModule.Player
             }
             
             // Idle->jump
-            if (Input.GetKeyDown(KeyCode.Space) && moveComponent.IfStanding)
+            if ((Input.GetKeyDown(KeyCode.Space)||Input.GetKeyUp(KeyCode.Space)) && moveComponent.IfStanding)
             {
                 ChangeStateTo(PlayerState.Jump);
                 return;
@@ -165,6 +183,8 @@ namespace ActorModule.Player
             
             // 减速
             moveComponent.Walk();
+            ViewDirection = Vector2.zero;
+            lastMoveToRight = 0;
         }
 
         private void PlayerAimUpdate()
@@ -181,8 +201,9 @@ namespace ActorModule.Player
 
 
             // 瞄准
-            gun.AimTo(mainCamera.ScreenToWorldPoint(Input.mousePosition));
-            
+            Vector3 mousePosWorld = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            gun.AimTo(mousePosWorld);
+
             // 射击
             if (Input.GetKeyDown(KeyCode.Mouse0))
                 gun.Shoot();
@@ -190,6 +211,9 @@ namespace ActorModule.Player
             // 移动
             MoveHorizontally();
             MoveVertically();
+            
+            // 瞄准带来的视角
+            ViewDirection = (mousePosWorld - transform.position).x>0? Vector2.right : Vector2.left;
         }
         
         //--------------UpdateEnd---------------
@@ -229,6 +253,7 @@ namespace ActorModule.Player
                     break;
                 case PlayerState.Aim:
                     moveComponent.ChangeMoveSpeedMultiply(playerMono.SpeedMultiply_Aiming);
+                    moveComponent.StartWalk(moveToRight);   // 这两行是用作改移速
                     gun.AimJitterReset();
                     break;
             }
