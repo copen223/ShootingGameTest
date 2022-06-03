@@ -8,6 +8,7 @@ namespace ActorModule
     public class BeHitPoint:MonoBehaviour
     {
         public DamageInfo.ElementType Element;
+        public BehitType Type;
         private ActorMono actor;
 
         public void Init(ActorMono _actor)
@@ -19,14 +20,12 @@ namespace ActorModule
         {
             originalColor = renderer.color;
         }
-
-        private void OnTriggerEnter2D(Collider2D other)
+        
+        public void BeHit(Bullet hitBullet)
         {
-            if (other.TryGetComponent(out Bullet hitBullet))
-            {
-                DamageInfo damageInfo = new DamageInfo(hitBullet.DamageType, hitBullet.Damage, this);
-                actor.BeHit(damageInfo);
-            }
+            DamageInfo damageInfo = new DamageInfo(
+                hitBullet, this);
+            actor.BeHit(damageInfo);
         }
         
         //--------受击闪烁---------
@@ -49,10 +48,16 @@ namespace ActorModule
 
         private async Task WaitTime(float time)
         {
-            Debug.Log("dsf");
             await Task.Delay((int)(time * 1000));
         }
         
+        
+        public enum BehitType
+        {
+            Normal,
+            Weakness,
+            Tough
+        }
         
     }
 }

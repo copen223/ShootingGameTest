@@ -118,7 +118,7 @@ namespace ActorModule.Player
                     moveComponent.ChangeYSpeed(0.7f);
                 }
             }
-            
+
             if (ifWillJump && moveComponent.IfStanding)
             {
                 moveComponent.Jump();
@@ -246,6 +246,15 @@ namespace ActorModule.Player
             // 移动
             MoveHorizontally();
             MoveVertically();
+            
+            // 移速修正
+            if(moveComponent.IfStanding)
+                moveComponent.ChangeMoveSpeedMultiply(playerMono.SpeedMultiply_Aiming);
+            else
+            {
+                moveComponent.ChangeMoveSpeedMultiply(1);
+            }
+            moveComponent.StartWalk(moveToRight);
         }
         
         //--------------UpdateEnd---------------
@@ -284,8 +293,6 @@ namespace ActorModule.Player
                     moveComponent.StartWalk(moveToRight);
                     break;
                 case PlayerState.Aim:
-                    moveComponent.ChangeMoveSpeedMultiply(playerMono.SpeedMultiply_Aiming);
-                    moveComponent.StartWalk(moveToRight);   // 这两行是用作改移速
                     gun.AimJitterReset();
                     break;
             }

@@ -1,18 +1,24 @@
 ﻿using System.Collections.Generic;
+using ShootModule.Gun;
+using UnityEngine;
 
 namespace ActorModule
 {
     public class DamageInfo
     {
-        public DamageInfo(ElementType _type,float _damage,params BeHitPoint[] _beHitPoints)
+        public DamageInfo(Bullet _sourseBullet,params BeHitPoint[] _beHitPoints)
         {
-            type = _type;
-            damage = _damage;
+            type = _sourseBullet.DamageType;
+            damage = _sourseBullet.Damage;
             BeHitPoints.Clear();
             foreach (var behit in _beHitPoints)
             {
                 BeHitPoints.Add(behit);
             }
+
+            sourceActor = _sourseBullet.SourceActor;
+            sourceBullet = _sourseBullet;
+            damagePos = _sourseBullet.transform.position;
         }
         
         public enum ElementType
@@ -26,6 +32,9 @@ namespace ActorModule
         public ElementType type;
         public float damage;
         public List<BeHitPoint> BeHitPoints = new List<BeHitPoint>();
+        public ActorMono sourceActor;
+        public Bullet sourceBullet;
+        public Vector2 damagePos;
 
         public float GetDamageMultiply(ElementType hit, ElementType behit)
         {

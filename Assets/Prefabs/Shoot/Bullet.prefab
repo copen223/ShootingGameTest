@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1109516120343815353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.8, z: 1}
   m_Children: []
   m_Father: {fileID: 8898884421805494202}
   m_RootOrder: 0
@@ -128,10 +128,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a4080a460e640c282a37d7f4144f034, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  DamageCount: 1
+  damageCountSet: 1
+  Powoer: 10
   Damage: 0
   DamageType: 0
   sprite: {fileID: 2686196672927600194}
   rigidbody: {fileID: 3238853541271694439}
+  collider: {fileID: 3578138051626812262}
   shootImpulse: 50
   maxTime_Existence: 2
 --- !u!50 &3238853541271694439

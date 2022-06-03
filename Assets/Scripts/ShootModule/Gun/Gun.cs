@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ActorModule;
 using UnityEngine;
 
 namespace ShootModule.Gun
@@ -12,7 +13,8 @@ namespace ShootModule.Gun
         //----------链接-----------
         [SerializeField]protected List<Ammo> ammoList = new List<Ammo>();
         protected Ammo selectedAmmo;
-
+        public ActorMono user;
+        
         //---------行为-----------
         protected abstract void Init();
         protected abstract void Reload(Ammo ammo);
