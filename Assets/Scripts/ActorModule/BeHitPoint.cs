@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using ShootModule.Gun;
 using UnityEngine;
 using System.Threading.Tasks;
+using AudioModule;
 
 namespace ActorModule
 {
@@ -10,6 +12,8 @@ namespace ActorModule
         public DamageInfo.ElementType Element;
         public BehitType Type;
         private ActorMono actor;
+
+        [SerializeField] private AudioController audio;
 
         public void Init(ActorMono _actor)
         {
@@ -26,6 +30,21 @@ namespace ActorModule
             DamageInfo damageInfo = new DamageInfo(
                 hitBullet, this);
             actor.BeHit(damageInfo);
+
+            //--------反馈---------
+            // 产生伤害文字
+            // 命中部位受击粒子反馈
+            // 闪烁
+            bool ifWeakness = Type == BehitType.Weakness;
+            
+            FlashOnBehit();
+            
+            if(ifWeakness)
+                audio.Play(1);
+            else
+                audio.Play(0);
+            
+            CameraController.MainInstance.Shake(ifWeakness);
         }
         
         //--------受击闪烁---------

@@ -98,6 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Element: 3
   Type: 1
+  audio: {fileID: 831613263}
   beHitColor: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
   flashTime: 0.5
   renderer: {fileID: 527502330}
@@ -111,12 +112,58 @@ CircleCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.016700787, y: 0}
+  m_Offset: {x: -0.0062106415, y: 0}
   serializedVersion: 2
-  m_Radius: 0.19670081
+  m_Radius: 0.14629537
+--- !u!1 &831613262
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 831613264}
+  - component: {fileID: 831613263}
+  m_Layer: 3
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &831613264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831613262}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8316258191307252253}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &831613263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 831613262}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b6068bf24b3e454dbb021c596eb53f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  audioClips:
+  - {fileID: 8300000, guid: b53133a5e4054f34788b25b45169b9f6, type: 3}
+  - {fileID: 8300000, guid: 97a950313ea076c4db85b5f3a123abdb, type: 3}
 --- !u!1 &8316258189713732396
 GameObject:
   m_ObjectHideFlags: 0
@@ -180,6 +227,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08dde8010a8ddc94888046336f986390, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Vel_Debug: {x: 0, y: 0}
   patrolPositions:
   - {fileID: 0}
   - {fileID: 0}
@@ -188,16 +236,20 @@ MonoBehaviour:
   patrolRestTime: 10
   moveSpeed: 5
   rayDistance: 5
-  playerLeaveDisX: 15
+  playerLeaveDisX: 20
   deceleration: 10
   rigidbody: {fileID: 8316258189713732398}
   monster: {fileID: 8316258189713732399}
   jumpRayDir: {x: 2, y: -1}
+  jumpRayUpDir: {x: 1.5, y: 1}
   jumpRayDis_Obstacle: 1.3
   jumpRayDis_Fall: 3
   jumpRayDis_Stand: 1.1
+  jumpRayDis_Up: 3.7
+  jumpRayDis_UpObstacle: 2.3
   jumpSpeed: 15
   jumpCD: 1
+  jumpUpDisThreshold_Chase: 1.5
 --- !u!50 &8316258189713732398
 Rigidbody2D:
   serializedVersion: 4
@@ -248,6 +300,7 @@ Transform:
   m_Children:
   - {fileID: 8316258191339941733}
   - {fileID: 527502329}
+  - {fileID: 831613264}
   m_Father: {fileID: 8316258189713732397}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -365,6 +418,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Element: 3
   Type: 2
+  audio: {fileID: 831613263}
   beHitColor: {r: 1, g: 0.81509435, b: 0.81509435, a: 1}
   flashTime: 0.1
   renderer: {fileID: 8316258191339941752}

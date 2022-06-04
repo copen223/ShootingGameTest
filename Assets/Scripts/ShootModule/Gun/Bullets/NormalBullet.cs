@@ -60,14 +60,15 @@ namespace ShootModule.Gun.Bullets
                 {
                     if (hit.collider.TryGetComponent(out BeHitPoint beHitPoint))
                     {
+                        
+                        beHitPoint.BeHit(this);
+                        DamageCount -= 1;
                         if (DamageCount <= 0)
                         {
                             OnEndUsing();
                             return;
                         }
-
-                        DamageCount -= 1;
-                        beHitPoint.BeHit(this);
+                        
                     }
                     
                 }

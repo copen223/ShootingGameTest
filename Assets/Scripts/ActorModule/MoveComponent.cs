@@ -4,6 +4,7 @@ using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using System.Threading.Tasks;
+using AudioModule;
 
 namespace ActorModule
 {
@@ -40,6 +41,7 @@ namespace ActorModule
         
         //--------挂载对象---------
         private Rigidbody2D rigidbody;
+        [SerializeField] private AudioController audio;
         
         public void Init(Rigidbody2D _rigidbody)
         {
@@ -163,6 +165,7 @@ namespace ActorModule
         {
             Vector3 velocity = rigidbody.velocity;
             rigidbody.velocity = new Vector2(velocity.x,jumpSpeed);
+            audio.Play(0);
         }
 
         private bool isAwaitingTask = false;

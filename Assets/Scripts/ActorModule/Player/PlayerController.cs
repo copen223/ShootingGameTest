@@ -1,5 +1,6 @@
 using System;
 using ActorModule;
+using AudioModule;
 using ShootModule.Gun;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace ActorModule.Player
         [SerializeField] private MoveComponent moveComponent;
         [SerializeField] private PlayerMono playerMono;
         [SerializeField] private Gun gun;
+        [SerializeField] private AudioController audio;
         private Camera mainCamera;
         
         //----------参数--------------

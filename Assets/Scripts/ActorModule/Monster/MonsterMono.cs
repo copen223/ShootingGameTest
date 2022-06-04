@@ -17,10 +17,8 @@ namespace ActorModule.Monster
                 float damage_Point = info.damage * muls[i];
                 i++;
                 
-                // 产生伤害文字
-                // 命中部位受击粒子反馈
-                // 闪烁
-                beHitPoint.FlashOnBehit();
+                // 反馈效果移动到behitpoint中
+                //beHitPoint.FlashOnBehit();
                 switch (beHitPoint.Type)
                 {
                     case BeHitPoint.BehitType.Normal:

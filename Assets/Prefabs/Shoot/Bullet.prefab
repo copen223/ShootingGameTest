@@ -130,7 +130,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DamageCount: 1
   damageCountSet: 1
-  Powoer: 10
+  Powoer: 5
   Damage: 0
   DamageType: 0
   sprite: {fileID: 2686196672927600194}

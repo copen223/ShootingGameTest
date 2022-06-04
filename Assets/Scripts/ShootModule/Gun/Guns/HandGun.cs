@@ -1,3 +1,4 @@
+using AudioModule;
 using UnityEngine;
 
 namespace ShootModule.Gun.Guns
@@ -17,6 +18,7 @@ namespace ShootModule.Gun.Guns
         private Vector2 curShootDir;
 
         [SerializeField] private GunSprite sprite;
+        [SerializeField] private AudioController audio;
         
         protected override void Init()
         {
@@ -75,6 +77,7 @@ namespace ShootModule.Gun.Guns
             bullet.Init(this);
             bullet.transform.position = transform.position;
             bullet.ShootTo(curShootDir);
+            audio.Play(0);
         }
 
         public override void StopAiming()

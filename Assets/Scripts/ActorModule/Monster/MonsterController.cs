@@ -8,6 +8,8 @@ namespace ActorModule.Monster
 {
     public class MonsterController : MonoBehaviour
     {
+        public Vector2 Vel_Debug;
+        
         [SerializeField] private List<Transform> patrolPositions;
         [SerializeField] private float arriveThreshold;
         [SerializeField] private float ildeWaitTime;
@@ -55,6 +57,8 @@ namespace ActorModule.Monster
         {
             StateUpdate();
             jumpTimer -= Time.deltaTime;
+
+            Vel_Debug = rigidbody.velocity;
         }
 
         #region 状态机
@@ -234,8 +238,8 @@ namespace ActorModule.Monster
         
         private void ChangeStateTo(MonsterState targetState)
         {
-            /*if (currentState == targetState)
-                return;*/
+            if (currentState == targetState)
+                return;
 
             currentState = targetState;
             StateStart(currentState);
@@ -255,7 +259,9 @@ namespace ActorModule.Monster
                     MonsterPatrolStart();
                     break;
                 case MonsterState.Stiff:
-                    rigidbody.AddForce(beatBackPower * beatBackDir,ForceMode2D.Impulse);
+                    var velX = (beatBackPower * beatBackDir).x;
+                    rigidbody.velocity = new Vector2(velX, rigidbody.velocity.y);
+                    /*rigidbody.AddForce(beatBackPower * beatBackDir,ForceMode2D.Impulse);*/
                     break;
             }
         }
@@ -378,7 +384,8 @@ namespace ActorModule.Monster
         {
             if( jumpTimer > 0)
                 return;
-            rigidbody.AddForce(Vector2.up * multiply * jumpSpeed,ForceMode2D.Impulse);
+            var velY = multiply * jumpSpeed;
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, velY);
             jumpTimer = jumpCD;
         }
 
@@ -411,7 +418,7 @@ namespace ActorModule.Monster
                     var dir = transform.position.x - info.damagePos.x > 0 ? Vector2.right : Vector2.left;
                     beatBackDir = dir;
                     beatBackPower = info.sourceBullet.Powoer;
-                    stiffTime = info.damage*5/beatBackPower;
+                    stiffTime = info.damage/beatBackPower;
                     Debug.Log(stiffTime);
                     ChangeStateTo(MonsterState.Stiff);
                     return;
