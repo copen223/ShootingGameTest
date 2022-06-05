@@ -9,6 +9,11 @@ namespace ActorModule
         [SerializeField] protected float healPoint;
         [SerializeField] protected float healPoint_Max;
         [SerializeField] protected List<BeHitPoint> beHitPoints = new List<BeHitPoint>();
+        
+        /// <summary>
+        /// 是否无敌
+        /// </summary>
+        public bool isInvincible;
 
         private void Awake()
         {

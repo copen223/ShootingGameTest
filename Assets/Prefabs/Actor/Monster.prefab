@@ -99,6 +99,7 @@ MonoBehaviour:
   Element: 3
   Type: 1
   audio: {fileID: 831613263}
+  beHitEffectPrefab: {fileID: 2291095029471938009, guid: 62d573eb4a78d174198526ab3b234d06, type: 3}
   beHitColor: {r: 0.9056604, g: 0.9056604, b: 0.9056604, a: 1}
   flashTime: 0.5
   renderer: {fileID: 527502330}
@@ -164,6 +165,70 @@ MonoBehaviour:
   audioClips:
   - {fileID: 8300000, guid: b53133a5e4054f34788b25b45169b9f6, type: 3}
   - {fileID: 8300000, guid: 97a950313ea076c4db85b5f3a123abdb, type: 3}
+--- !u!1 &1997764587300359164
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4683874142953528640}
+  - component: {fileID: 992870013434969713}
+  - component: {fileID: 5887883683135859531}
+  m_Layer: 7
+  m_Name: DamageBody
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4683874142953528640
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997764587300359164}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8316258189713732397}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &992870013434969713
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997764587300359164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 967077cb6b15261418cf834a553f009d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 2
+  damageElementType: 3
+  sourceActor: {fileID: 8316258189713732399}
+  ifOnlyDamagePlayer: 1
+--- !u!70 &5887883683135859531
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1997764587300359164}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.005060196, y: -0.015178204}
+  m_Size: {x: 0.97558594, y: 2.0017653}
+  m_Direction: 0
 --- !u!1 &8316258189713732396
 GameObject:
   m_ObjectHideFlags: 0
@@ -195,6 +260,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 8316258191307252253}
+  - {fileID: 4683874142953528640}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -215,6 +281,7 @@ MonoBehaviour:
   beHitPoints:
   - {fileID: 8316258191339941734}
   - {fileID: 527502331}
+  isInvincible: 0
 --- !u!114 &804810814218882336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -234,9 +301,10 @@ MonoBehaviour:
   arriveThreshold: 0.5
   ildeWaitTime: 1
   patrolRestTime: 10
-  moveSpeed: 5
-  rayDistance: 5
+  moveSpeed: 6
+  rayDistance: 9
   playerLeaveDisX: 20
+  damage: 0
   deceleration: 10
   rigidbody: {fileID: 8316258189713732398}
   monster: {fileID: 8316258189713732399}
@@ -419,6 +487,7 @@ MonoBehaviour:
   Element: 3
   Type: 2
   audio: {fileID: 831613263}
+  beHitEffectPrefab: {fileID: 0}
   beHitColor: {r: 1, g: 0.81509435, b: 0.81509435, a: 1}
   flashTime: 0.1
   renderer: {fileID: 8316258191339941752}

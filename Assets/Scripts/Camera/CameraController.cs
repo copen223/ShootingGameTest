@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float ShakeAmplitude_weak;
     [SerializeField] private float ShakeAmplitude_Strong;
     [SerializeField] private float ShakeAttenuationSpeed;
-    private Vector2 shakeOffset = Vector2.zero;
+    public Vector2 shakeOffset = Vector2.zero;
     
     
     private Vector3 targetPosition = new Vector3(0,0,0);
@@ -42,7 +42,7 @@ public class CameraController : MonoBehaviour
         basedPosition = transform.position;
     }
 
-    private void LateUpdate()
+    private void Update()
     {
         Vector3 offset_Direction = Vector3.zero;
         if (target.TryGetComponent(out PlayerController player))

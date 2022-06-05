@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 1109516120343815353}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.8, z: 1}
+  m_LocalScale: {x: 0.7, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8898884421805494202}
   m_RootOrder: 0
@@ -71,12 +71,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -9095717837082945937, guid: bf7adffb8c05ccf47abae5b6fd6ec5e0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: bf7adffb8c05ccf47abae5b6fd6ec5e0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 2}
+  m_Size: {x: 1, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -138,6 +138,9 @@ MonoBehaviour:
   collider: {fileID: 3578138051626812262}
   shootImpulse: 50
   maxTime_Existence: 2
+  suspendCount: 1
+  suspendScale: 0.5
+  hitFireEffect: {fileID: 0}
 --- !u!50 &3238853541271694439
 Rigidbody2D:
   serializedVersion: 4

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ActorModule.Monster;
 using ShootModule.Gun;
 using UnityEngine;
 
@@ -6,19 +7,32 @@ namespace ActorModule
 {
     public class DamageInfo
     {
-        public DamageInfo(Bullet _sourseBullet,params BeHitPoint[] _beHitPoints)
+        public DamageInfo(Bullet _sourseBullet,BeHitPoint _beHitPoint)
         {
             type = _sourseBullet.DamageType;
             damage = _sourseBullet.Damage;
-            BeHitPoints.Clear();
-            foreach (var behit in _beHitPoints)
-            {
-                BeHitPoints.Add(behit);
-            }
+            beHitPoint = _beHitPoint;
 
             sourceActor = _sourseBullet.SourceActor;
             sourceBullet = _sourseBullet;
             damagePos = _sourseBullet.transform.position;
+
+            float damage_Point = damage * GetDamageMultiply_Element(type, beHitPoint.Element);
+            finalDamage = damage_Point * GetDamageMultiply_Weakness(beHitPoint);
+        }
+
+        public DamageInfo(DamageBody damageBody, BeHitPoint _behitPoint)
+        {
+            type = damageBody.damageElementType;
+            damage = damageBody.damage;
+            beHitPoint = _behitPoint;
+
+            sourceActor = damageBody.sourceActor;
+            sourceDamageBody = damageBody;
+            damagePos = sourceDamageBody.transform.position;
+            
+            float damage_Point = damage * GetDamageMultiply_Element(type, beHitPoint.Element);
+            finalDamage = damage_Point * GetDamageMultiply_Weakness(beHitPoint);
         }
         
         public enum ElementType
@@ -30,13 +44,27 @@ namespace ActorModule
         }
 
         public ElementType type;
+        /// <summary>
+        /// 基础伤害值
+        /// </summary>
         public float damage;
-        public List<BeHitPoint> BeHitPoints = new List<BeHitPoint>();
+        /// <summary>
+        /// 最终伤害值
+        /// </summary>
+        public float finalDamage;
+        public BeHitPoint beHitPoint;
         public ActorMono sourceActor;
         public Bullet sourceBullet;
+        public DamageBody sourceDamageBody;
         public Vector2 damagePos;
-
-        public float GetDamageMultiply(ElementType hit, ElementType behit)
+        
+        /// <summary>
+        /// 元素伤害的乘值
+        /// </summary>
+        /// <param name="hit"></param>
+        /// <param name="behit"></param>
+        /// <returns></returns>
+        public float GetDamageMultiply_Element(ElementType hit, ElementType behit)
         {
             float multiply = 10;
             
@@ -67,7 +95,25 @@ namespace ActorModule
             return multiply;
         }
 
-        /// <summary>
+        public float GetDamageMultiply_Weakness(BeHitPoint behit)
+        {
+            switch (behit.Type)
+            {
+                case BeHitPoint.BehitType.Normal:
+                    break;
+                case BeHitPoint.BehitType.Tough:
+                    return 0.25f;
+                    break;
+                case BeHitPoint.BehitType.Weakness:
+                    return 4f;
+                    break;
+            }
+
+            return 1;
+        }
+        
+        
+        /*/// <summary>
         /// 获得元素增伤计算的乘值列表
         /// </summary>
         /// <returns></returns>
@@ -81,7 +127,7 @@ namespace ActorModule
             }
 
             return multiplies;
-        }
+        }*/
 
     }
 }

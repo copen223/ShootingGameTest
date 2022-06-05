@@ -36,6 +36,7 @@ namespace ActorModule.Player
         {
             moveComponent.Init(rigidbody);
             mainCamera = Camera.main;
+            playerMono.OnBeHitEvent += OnBeHitCallback;
         }
 
         private void Update()
@@ -107,6 +108,7 @@ namespace ActorModule.Player
                     ifWillJump = true;
                 if (moveComponent.IfStanding)
                 {
+                    moveSpeed_BeforeJump = Mathf.Abs(rigidbody.velocity.x);
                     moveComponent.Jump();
                     ifWillJump = false;
                     return;
@@ -123,6 +125,7 @@ namespace ActorModule.Player
 
             if (ifWillJump && moveComponent.IfStanding)
             {
+                moveSpeed_BeforeJump = Mathf.Abs(rigidbody.velocity.x);
                 moveComponent.Jump();
                 ifWillJump = false;
                 return;
@@ -211,6 +214,8 @@ namespace ActorModule.Player
             lastMoveToRight = 0;
         }
 
+
+        private float moveSpeed_BeforeJump;
         private void PlayerAimUpdate()
         {
             // aim->Idle; aim->Jump
@@ -254,7 +259,7 @@ namespace ActorModule.Player
                 moveComponent.ChangeMoveSpeedMultiply(playerMono.SpeedMultiply_Aiming);
             else
             {
-                moveComponent.ChangeMoveSpeedMultiply(1);
+                moveComponent.ChangeMoveSpeed(moveSpeed_BeforeJump);
             }
             moveComponent.StartWalk(moveToRight);
         }
@@ -290,6 +295,7 @@ namespace ActorModule.Player
                     break;
                 case PlayerState.Jump:
                     moveComponent.Jump();
+                    moveSpeed_BeforeJump = Mathf.Abs(rigidbody.velocity.x);
                     break;
                 case PlayerState.Walk:
                     moveComponent.StartWalk(moveToRight);
@@ -320,6 +326,15 @@ namespace ActorModule.Player
             Aim
         }
         
+        #endregion
+
+        #region 事件
+
+        void OnBeHitCallback(Vector2 force)
+        {
+            rigidbody.AddForce(force, ForceMode2D.Impulse);
+        }
+
         #endregion
     }
 }

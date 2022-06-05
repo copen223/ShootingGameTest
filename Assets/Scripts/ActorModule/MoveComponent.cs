@@ -103,7 +103,7 @@ namespace ActorModule
         /// <param name="speed"></param>
         public void ChangeMoveSpeed(float speed)
         {
-            moveSpeed = speed;
+            moveSpeedMultiply = Mathf.Abs(speed/moveSpeed);
         }
         /// <summary>
         /// 速度乘数

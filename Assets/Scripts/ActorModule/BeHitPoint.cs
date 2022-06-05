@@ -3,7 +3,11 @@ using System.Runtime.InteropServices;
 using ShootModule.Gun;
 using UnityEngine;
 using System.Threading.Tasks;
+using ActorModule.Monster;
 using AudioModule;
+using FloatTextModule;
+using ShootModule.Effect;
+using Tool;
 
 namespace ActorModule
 {
@@ -11,9 +15,11 @@ namespace ActorModule
     {
         public DamageInfo.ElementType Element;
         public BehitType Type;
-        private ActorMono actor;
+        public ActorMono actor { private set; get; }
 
         [SerializeField] private AudioController audio;
+        [SerializeField] private BeHitEffect beHitEffectPrefab;
+        private TargetPool<BeHitEffect> beHitEffectPool;
 
         public void Init(ActorMono _actor)
         {
@@ -23,6 +29,8 @@ namespace ActorModule
         private void Start()
         {
             originalColor = renderer.color;
+            if(beHitEffectPrefab != null)
+                beHitEffectPool = new TargetPool<BeHitEffect>(beHitEffectPrefab, transform);
         }
         
         public void BeHit(Bullet hitBullet)
@@ -43,9 +51,34 @@ namespace ActorModule
                 audio.Play(1);
             else
                 audio.Play(0);
+
+            //Color damageColor = ifWeakness ? Color.red : Color.white;
             
             CameraController.MainInstance.Shake(ifWeakness);
+            var effect = beHitEffectPool?.GetActiveTarget();
+            if(effect != null)
+                effect.transform.position = transform.position + Vector3.back * 5;
+
+            /*FloatTextManager.Instance.CreatDamageFloatTextAt(damageInfo.finalDamage + "",transform.position
+            ,damageColor,ifWeakness);*/
         }
+
+        public void BeHit(DamageBody damageBody)
+        {
+            if(actor.isInvincible)
+                return;
+            DamageInfo damageInfo = new DamageInfo(damageBody, this);
+            actor.BeHit(damageInfo);
+            bool ifWeakness = Type == BehitType.Weakness;
+            
+            FlashOnBehit();
+            
+            if(ifWeakness)
+                audio.Play(1);
+            else
+                audio.Play(0);
+        }
+        
         
         //--------受击闪烁---------
         private Color originalColor;

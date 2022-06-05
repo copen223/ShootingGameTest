@@ -77,6 +77,7 @@ namespace ShootModule.Gun.Guns
             bullet.Init(this);
             bullet.transform.position = transform.position;
             bullet.ShootTo(curShootDir);
+            sprite.ShowShootFire();
             audio.Play(0);
         }
 

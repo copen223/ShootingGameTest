@@ -10,6 +10,7 @@ namespace ActorModule.Monster
     {
         public Vector2 Vel_Debug;
         
+        [Header("移动检测")]
         [SerializeField] private List<Transform> patrolPositions;
         [SerializeField] private float arriveThreshold;
         [SerializeField] private float ildeWaitTime;
@@ -17,6 +18,10 @@ namespace ActorModule.Monster
         [SerializeField] private float moveSpeed;
         [SerializeField] private float rayDistance;
         [SerializeField] private float playerLeaveDisX;
+
+        [Header("伤害")]
+        [SerializeField]
+        private float damage;
 
         private float stiffTime;
         private float beatBackPower;
@@ -135,9 +140,16 @@ namespace ActorModule.Monster
                 ChangeStateTo(MonsterState.Idle);
                 return;
             }
-            int chaseRight = (player_Target.transform.position.x - transform.position.x) > 0 ? 1 : -1;
-            ViewDirection = chaseRight > 0 ? Vector2.right : Vector2.left;
-            var velocity = Vector2.right * moveSpeed * chaseRight;
+
+            float disY = player_Target.transform.position.y - transform.position.y;
+            float disX = player_Target.transform.position.x - transform.position.x;
+            
+            int chaseRight = disX > 0 ? 1 : -1;
+            
+            if(!(disX < Mathf.Epsilon && Mathf.Abs(disY) > arriveThreshold))
+                ViewDirection = chaseRight > 0 ? Vector2.right : Vector2.left;
+            
+            var velocity = Vector2.right * moveSpeed * ViewDirection.x;
             rigidbody.velocity = new Vector2(velocity.x, rigidbody.velocity.y);
             
             CheckAndJumpWhileMove();
@@ -256,6 +268,11 @@ namespace ActorModule.Monster
                     timer = 0;
                     break;
                 case MonsterState.Patrol:
+                    if (patrolPositions.Count <= 0)
+                    {
+                        ChangeStateTo(MonsterState.Idle);
+                        break;
+                    }
                     MonsterPatrolStart();
                     break;
                 case MonsterState.Stiff:
@@ -352,7 +369,7 @@ namespace ActorModule.Monster
             if (currentState == MonsterState.Chase)
             {
                 var disY = player_Target.transform.position.y - transform.position.y;
-                Debug.Log(disY);
+
                 if (disY > jumpUpDisThreshold_Chase)
                 {
                     foreach (var hit in hits_Up)
@@ -411,18 +428,15 @@ namespace ActorModule.Monster
             ifStopPatrol = true;
             ChangeStateTo(MonsterState.Chase);
 
-            foreach (var behit in info.BeHitPoints)
+            if (info.beHitPoint.Type == BeHitPoint.BehitType.Weakness)
             {
-                if (behit.Type == BeHitPoint.BehitType.Weakness)
-                {
-                    var dir = transform.position.x - info.damagePos.x > 0 ? Vector2.right : Vector2.left;
-                    beatBackDir = dir;
-                    beatBackPower = info.sourceBullet.Powoer;
-                    stiffTime = info.damage/beatBackPower;
-                    Debug.Log(stiffTime);
-                    ChangeStateTo(MonsterState.Stiff);
-                    return;
-                }
+                var dir = transform.position.x - info.damagePos.x > 0 ? Vector2.right : Vector2.left;
+                beatBackDir = dir;
+                beatBackPower = info.sourceBullet.Powoer;
+                stiffTime = info.damage/beatBackPower;
+                Debug.Log(stiffTime);
+                ChangeStateTo(MonsterState.Stiff);
+                return;
             }
         }
         
