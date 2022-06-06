@@ -4,6 +4,12 @@ namespace ShootModule.Gun
 {
     public class BulletSprite : MonoBehaviour
     {
+        [SerializeField] private SpriteRenderer spriteRenderer;
+
+        public void SetColor(Color color)
+        {
+            spriteRenderer.color = color;
+        }
         public void SetRotationByDir(Vector2 direction)
         {
             float rotation = Vector2.Angle(Vector2.up, direction);

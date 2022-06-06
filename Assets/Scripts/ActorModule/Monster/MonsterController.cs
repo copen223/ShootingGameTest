@@ -428,7 +428,7 @@ namespace ActorModule.Monster
             ifStopPatrol = true;
             ChangeStateTo(MonsterState.Chase);
 
-            if (info.beHitPoint.Type == BeHitPoint.BehitType.Weakness)
+            if (info.beHitPoint.Type == BeHitPoint.BehitType.Weakness || info.ifBeHitWeakElement == 1)
             {
                 var dir = transform.position.x - info.damagePos.x > 0 ? Vector2.right : Vector2.left;
                 beatBackDir = dir;

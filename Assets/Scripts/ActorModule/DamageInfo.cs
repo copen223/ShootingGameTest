@@ -57,6 +57,8 @@ namespace ActorModule
         public Bullet sourceBullet;
         public DamageBody sourceDamageBody;
         public Vector2 damagePos;
+
+        public int ifBeHitWeakElement { get; private set; }
         
         /// <summary>
         /// 元素伤害的乘值
@@ -64,31 +66,66 @@ namespace ActorModule
         /// <param name="hit"></param>
         /// <param name="behit"></param>
         /// <returns></returns>
-        public float GetDamageMultiply_Element(ElementType hit, ElementType behit)
+        private float GetDamageMultiply_Element(ElementType hit, ElementType behit)
         {
             float multiply = 10;
             
             switch (hit)
             {
                 case ElementType.Fire:
-                    if (behit == ElementType.Ice)
-                        multiply *= 2f;
                     if (behit == ElementType.Thunder)
+                    {
+                        multiply *= 4f;
+                        ifBeHitWeakElement = 1;
+                    }
+                    else if  (behit == ElementType.Ice)
+                    {
                         multiply /= 2f;
+                        ifBeHitWeakElement = -1;
+                    }
+                    else
+                    {
+                        ifBeHitWeakElement = 0;
+                    }
                     break;
+                
                 case ElementType.Thunder:
-                    if (behit == ElementType.Fire)
-                        multiply *= 2f;
                     if (behit == ElementType.Ice)
+                    {
+                        multiply *= 4f;
+                        ifBeHitWeakElement = 1;
+                    }
+                    else if  (behit == ElementType.Fire)
+                    {
                         multiply /= 2f;
+                        ifBeHitWeakElement = -1;
+                    }
+                    else
+                    {
+                        ifBeHitWeakElement = 0;    
+                    } 
                     break;
+                
                 case ElementType.Ice:
-                    if (behit == ElementType.Thunder)
-                        multiply *= 2f;
                     if (behit == ElementType.Fire)
+                    {
+                        multiply *= 4f;
+                        ifBeHitWeakElement = 1;
+                    }
+                    else if (behit == ElementType.Thunder)
+                    {
                         multiply /= 2f;
+                        ifBeHitWeakElement = -1;
+                    }
+                    else
+                    {
+                        ifBeHitWeakElement = 0;
+                    }
+
                     break;
+                
                 case ElementType.Normal:
+                    ifBeHitWeakElement = 0;
                     break;
             }
 

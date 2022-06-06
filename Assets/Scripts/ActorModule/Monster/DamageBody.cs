@@ -13,7 +13,7 @@ namespace ActorModule.Monster
         
         private void OnTriggerStay2D(Collider2D other)
         {
-            Debug.Log("2");
+//            Debug.Log("2");
             if (other.TryGetComponent(out BeHitPoint behit))
             {
                 if(behit.actor == sourceActor)

@@ -139,8 +139,7 @@ MonoBehaviour:
   shootImpulse: 50
   maxTime_Existence: 2
   suspendCount: 1
-  suspendScale: 0.5
-  hitFireEffect: {fileID: 0}
+  suspendScale: 0.9
 --- !u!50 &3238853541271694439
 Rigidbody2D:
   serializedVersion: 4
@@ -222,3 +221,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 179305871405cb74ab8389e7d728b46a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 2467163250526907253}

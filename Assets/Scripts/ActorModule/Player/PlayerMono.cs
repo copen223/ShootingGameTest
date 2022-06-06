@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Threading.Tasks;
+using UI;
 
 namespace ActorModule.Player
 {
@@ -12,13 +13,14 @@ namespace ActorModule.Player
         private float invincibilityTimer;
 
         [SerializeField] private float behitPower;
-        
+
         public override void BeHit(DamageInfo info)
         {
             float damage = info.finalDamage;
             
             healPoint -= damage;
             healPoint = healPoint <= 0 ? 0 : healPoint;
+            OnHealPointChangeEvent?.Invoke(healPoint/healPoint_Max);
 
             isInvincible = true;
             KeepInvincible();
@@ -49,5 +51,6 @@ namespace ActorModule.Player
         }
 
         public event Action<Vector2> OnBeHitEvent;
+        public event Action<float> OnHealPointChangeEvent;
     }
 }

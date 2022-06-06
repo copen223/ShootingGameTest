@@ -14,8 +14,13 @@ namespace ShootModule.Gun
         protected Gun gun;
         [SerializeField] protected BulletSprite sprite;
         public ActorMono SourceActor => gun.user;
-        
+
         public abstract void ShootTo(Vector2 direction);
         public abstract void Init(Gun _gun);
+
+        public virtual void SetColor(Color color)
+        {
+            sprite.SetColor(color);
+        }
     }
 }

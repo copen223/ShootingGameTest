@@ -1,5 +1,8 @@
+using System;
 using AudioModule;
+using UI;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace ShootModule.Gun.Guns
 {
@@ -19,7 +22,36 @@ namespace ShootModule.Gun.Guns
 
         [SerializeField] private GunSprite sprite;
         [SerializeField] private AudioController audio;
-        
+        [SerializeField] private AmmoUI ammoUI;
+
+        private int ammoIndex;
+
+        private void Start()
+        {
+            ammoUI.SelectAmmo(ammoIndex);
+            selectedAmmo = ammoList[ammoIndex];
+        }
+
+        private void Update()
+        {
+           float scrollWheel = Input.GetAxis("Mouse ScrollWheel");
+           if (scrollWheel > 0)
+           {
+               ammoIndex--;
+               ammoIndex = ammoIndex < 0 ? ammoList.Count - 1 : ammoIndex;
+               ammoUI.SelectAmmo(ammoIndex);
+               selectedAmmo = ammoList[ammoIndex];
+           }
+           else if (scrollWheel <0)
+           {
+               ammoIndex++;
+               ammoIndex = ammoIndex >= ammoList.Count ? 0 : ammoIndex;
+               ammoUI.SelectAmmo(ammoIndex);
+               selectedAmmo = ammoList[ammoIndex];
+           }
+               
+        }
+
         protected override void Init()
         {
             throw new System.NotImplementedException();
@@ -72,12 +104,21 @@ namespace ShootModule.Gun.Guns
         {
             AimJitterReset();
 
-            var curAmmo = ammoList[0];
+            var curAmmo = selectedAmmo;
             var bullet = curAmmo.GetBullet();
+
+            if (bullet == null)
+            {
+                //----------无子弹声音----------
+                audio.Play(1);
+                return;
+            }
+            
             bullet.Init(this);
             bullet.transform.position = transform.position;
             bullet.ShootTo(curShootDir);
             sprite.ShowShootFire();
+            sprite.ResetTimerAfterShoot();
             audio.Play(0);
         }
 

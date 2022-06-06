@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ActorModule.Monster;
 using AudioModule;
 using FloatTextModule;
+using Manager;
 using ShootModule.Effect;
 using Tool;
 
@@ -17,9 +18,10 @@ namespace ActorModule
         public BehitType Type;
         public ActorMono actor { private set; get; }
 
-        [SerializeField] private AudioController audio;
-        [SerializeField] private BeHitEffect beHitEffectPrefab;
-        private TargetPool<BeHitEffect> beHitEffectPool;
+        [SerializeField] protected AudioController audio;
+        [SerializeField] protected BeHitEffect beHitEffectPrefab;
+        protected TargetPool<BeHitEffect> beHitEffectPool;
+        [SerializeField] protected SpriteRenderer framerRenderer;
 
         public void Init(ActorMono _actor)
         {
@@ -28,42 +30,57 @@ namespace ActorModule
 
         private void Start()
         {
+            framerRenderer.color = GameManager.Instance.GetElementColor(Element);
             originalColor = renderer.color;
             if(beHitEffectPrefab != null)
                 beHitEffectPool = new TargetPool<BeHitEffect>(beHitEffectPrefab, transform);
         }
         
-        public void BeHit(Bullet hitBullet)
+        public virtual void BeHit(Bullet hitBullet)
         {
             DamageInfo damageInfo = new DamageInfo(
                 hitBullet, this);
-            actor.BeHit(damageInfo);
+            actor?.BeHit(damageInfo);
 
             //--------反馈---------
             // 产生伤害文字
             // 命中部位受击粒子反馈
             // 闪烁
             bool ifWeakness = Type == BehitType.Weakness;
+            bool ifTough = Type == BehitType.Tough;
+            int elementWeakness = damageInfo.ifBeHitWeakElement;
             
-            FlashOnBehit();
+            if(elementWeakness != -1)
+                FlashOnBehit();
             
-            if(ifWeakness)
+            if(ifWeakness || elementWeakness == 1)
                 audio.Play(1);
+            else if(elementWeakness == -1)
+                audio.Play(2);
+            else if(ifTough)
+                audio.Play(2);
             else
+            {
                 audio.Play(0);
+            }
 
             //Color damageColor = ifWeakness ? Color.red : Color.white;
             
-            CameraController.MainInstance.Shake(ifWeakness);
-            var effect = beHitEffectPool?.GetActiveTarget();
-            if(effect != null)
-                effect.transform.position = transform.position + Vector3.back * 5;
+            if(elementWeakness != -1)
+                CameraController.MainInstance.Shake(ifWeakness);
+
+            if (ifWeakness || elementWeakness == 1)
+            {
+                var effect = beHitEffectPool?.GetActiveTarget();
+                if (effect != null)
+                    effect.transform.position = transform.position + Vector3.back * 5;
+            }
 
             /*FloatTextManager.Instance.CreatDamageFloatTextAt(damageInfo.finalDamage + "",transform.position
             ,damageColor,ifWeakness);*/
         }
 
-        public void BeHit(DamageBody damageBody)
+        public virtual void BeHit(DamageBody damageBody)
         {
             if(actor.isInvincible)
                 return;
@@ -81,10 +98,10 @@ namespace ActorModule
         
         
         //--------受击闪烁---------
-        private Color originalColor;
-        [SerializeField] private Color beHitColor;
+        protected Color originalColor;
+        [SerializeField] protected Color beHitColor;
         [SerializeField] private float flashTime;
-        [SerializeField] private SpriteRenderer renderer;
+        [SerializeField] protected SpriteRenderer renderer;
 
         private bool ifFlashing = false;
         public async void FlashOnBehit()

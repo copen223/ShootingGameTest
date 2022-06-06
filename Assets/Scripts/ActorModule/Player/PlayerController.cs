@@ -3,6 +3,7 @@ using ActorModule;
 using AudioModule;
 using ShootModule.Gun;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace ActorModule.Player
 {

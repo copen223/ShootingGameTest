@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using ActorModule;
+using Manager;
 using Tool;
 using UnityEngine;
 
@@ -11,6 +13,7 @@ namespace ShootModule.Gun.Ammos
         [SerializeField] private Transform bulletParent;
         [SerializeField] private Bullet bulletPrefab;
         private TargetPool<Bullet> bulletPool;
+        [SerializeField] private DamageInfo.ElementType elementType;
         private void Start()
         {
             bulletPool = new TargetPool<Bullet>(bulletPrefab,bulletParent);
@@ -40,8 +43,25 @@ namespace ShootModule.Gun.Ammos
         /// <returns></returns>
         public override Bullet GetBullet()
         {
+            if (ammoLoad > 0)
+            {
+                ammoLoad--;
+            }
+            else
+            {
+                Reload();
+                if(ammoLoad >0)
+                    ammoLoad--;
+                else
+                {
+                    return null;
+                }
+            }
+            
             var bullet = bulletPool.GetActiveTarget();
             bullet.gameObject.SetActive(true);
+            bullet.DamageType = elementType;
+            bullet.SetColor(GameManager.Instance.GetElementColor(elementType));
             return bullet;
         }
     }
