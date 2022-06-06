@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Threading.Tasks;
+using ShootModule.Gun;
 using UI;
 
 namespace ActorModule.Player
@@ -13,6 +14,16 @@ namespace ActorModule.Player
         private float invincibilityTimer;
 
         [SerializeField] private float behitPower;
+
+        public Gun gun;
+
+        private void Start()
+        {
+            foreach (var hit in beHitPoints)
+            {
+                hit.Init(this);
+            }
+        }
 
         public override void BeHit(DamageInfo info)
         {

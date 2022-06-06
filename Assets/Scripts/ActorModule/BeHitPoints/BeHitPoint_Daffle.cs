@@ -12,6 +12,8 @@ namespace ActorModule.BeHitPoints
         [SerializeField] private float HealPoint;
         private void Start()
         {
+            actor = transform.parent.parent.GetComponent<ActorMono>();
+            
             framerRenderer.color = GameManager.Instance.GetElementColor(Element);
             originalColor = renderer.color;
             if(beHitEffectPrefab != null)

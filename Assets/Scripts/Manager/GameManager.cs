@@ -1,4 +1,6 @@
+using System.Runtime.InteropServices;
 using ActorModule;
+using ShootModule.Gun;
 using UnityEngine;
 
 namespace Manager
@@ -37,7 +39,25 @@ namespace Manager
             }
             return Color.black;
         }
+
+
+        public Transform bulletParent;
+
+        [SerializeField] private AmmoItem ammoPrefab;
+        [SerializeField] private Transform ammoParent;
+        public void CreatAmmoAt(DamageInfo.ElementType type, Vector2 position)
+        {
+            var ammo = Instantiate(ammoPrefab,ammoParent);
+            ammo.transform.position = position;
+            ammo.elementType = type;
+            ammo.num = 6;
+        }
         
-        
+        public enum ItemType
+        {
+            Ammo,
+            MedKit
+        }
+
     }
 }

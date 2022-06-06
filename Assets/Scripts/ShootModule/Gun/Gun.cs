@@ -23,5 +23,24 @@ namespace ShootModule.Gun
         public abstract void AimJitterReset();
         public abstract void Shoot();
         public abstract void StopAiming();
+
+        public virtual void AddAmmo(DamageInfo.ElementType type,int num)
+        {
+            switch (type)
+            {
+                case DamageInfo.ElementType.Fire:
+                    ammoList[3].ammoReserve += num;
+                    break;
+                case DamageInfo.ElementType.Ice:
+                    ammoList[1].ammoReserve += num;
+                    break;
+                case DamageInfo.ElementType.Normal:
+                    ammoList[0].ammoReserve += num;
+                    break;
+                case DamageInfo.ElementType.Thunder:
+                    ammoList[2].ammoReserve += num;
+                    break;
+            }
+        }
     }
 }

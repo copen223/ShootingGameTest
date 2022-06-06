@@ -20,6 +20,8 @@ namespace ShootModule.Gun.Bullets
         [SerializeField] private int suspendCount;
         [SerializeField] private float suspendScale;
 
+        public bool ifAttckMonter1_Player0;
+
         private Vector2 shootDir;
 
         private void Update()
@@ -77,7 +79,7 @@ namespace ShootModule.Gun.Bullets
                 OnEndUsing();
                 return;
             }
-
+            
             if (col.TryGetComponent(out BeHitPoint hitTarget))
             {
                 var hits = Physics2D.CapsuleCastAll(startPos, collider.size,
@@ -87,15 +89,25 @@ namespace ShootModule.Gun.Bullets
                 {
                     if (hit.collider.TryGetComponent(out BeHitPoint beHitPoint))
                     {
+                        if(ifAttckMonter1_Player0)
+                            if(beHitPoint.CompareTag("Player"))
+                                continue;
+                        if(!ifAttckMonter1_Player0)
+                            if(beHitPoint.CompareTag("Monster"))
+                                continue;
+
                         if (DamageCount <= 0)
                         {
                             OnEndUsing();
                             return;
                         }
-                        if(beHitPoint.actor == SourceActor)
-                            continue;
-                        
-                        
+
+                        if (SourceActor == null)
+                        {
+                            if (beHitPoint.actor == SourceActor)
+                                continue;
+                        }
+
                         beHitPoint.BeHit(this);
                         DamageCount -= 1;
 

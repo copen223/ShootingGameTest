@@ -45,6 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioClips:
   - {fileID: 8300000, guid: 61372b4e8e37e834daa1e0d780665720, type: 3}
+  - {fileID: 8300000, guid: 26918e370e530b44f91141d10e54f378, type: 3}
 --- !u!1 &741489047
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +128,56 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &790233710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 790233712}
+  - component: {fileID: 790233711}
+  m_Layer: 3
+  m_Name: Ammo_Fire
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &790233712
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790233710}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3893310720611677316}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &790233711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 790233710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaf3909a706f4089adede8d23798fa08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoLoad: 8
+  ammoLoad_Max: 8
+  ammoReserve: 0
+  ammoReserve_Max: 40
+  bulletParent: {fileID: 0}
+  bulletPrefab: {fileID: 2884413929125965641, guid: 158f4bbf656579f47ba1a23bd998c137, type: 3}
+  elementType: 0
 --- !u!1 &939386552
 GameObject:
   m_ObjectHideFlags: 0
@@ -197,8 +248,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578215566}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.666, y: 0, z: 0}
-  m_LocalScale: {x: 1.2793325, y: 0.81126446, z: 1.6347}
+  m_LocalPosition: {x: 0.847, y: -0.009, z: 0}
+  m_LocalScale: {x: 1.8, y: 1.8, z: 1}
   m_Children: []
   m_Father: {fileID: 3893310722141813942}
   m_RootOrder: 1
@@ -244,7 +295,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 3
   m_Sprite: {fileID: 21300000, guid: 52d0baed61a7ee74fb9f5f426f037414, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.53333336}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -254,6 +305,106 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1787460408
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1787460409}
+  - component: {fileID: 1787460410}
+  m_Layer: 3
+  m_Name: Ammo_Thunder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1787460409
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787460408}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3893310720611677316}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1787460410
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1787460408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaf3909a706f4089adede8d23798fa08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoLoad: 8
+  ammoLoad_Max: 8
+  ammoReserve: 40
+  ammoReserve_Max: 40
+  bulletParent: {fileID: 0}
+  bulletPrefab: {fileID: 2884413929125965641, guid: 158f4bbf656579f47ba1a23bd998c137, type: 3}
+  elementType: 1
+--- !u!1 &2066270588
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2066270589}
+  - component: {fileID: 2066270590}
+  m_Layer: 3
+  m_Name: Ammo_Ice
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2066270589
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066270588}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3893310720611677316}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2066270590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2066270588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaf3909a706f4089adede8d23798fa08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ammoLoad: 8
+  ammoLoad_Max: 8
+  ammoReserve: 40
+  ammoReserve_Max: 40
+  bulletParent: {fileID: 0}
+  bulletPrefab: {fileID: 2884413929125965641, guid: 158f4bbf656579f47ba1a23bd998c137, type: 3}
+  elementType: 2
 --- !u!1 &3893310720611677315
 GameObject:
   m_ObjectHideFlags: 0
@@ -289,6 +440,9 @@ Transform:
   - {fileID: 3893310722141813942}
   - {fileID: 3893310722504194680}
   - {fileID: 939386554}
+  - {fileID: 2066270589}
+  - {fileID: 790233712}
+  - {fileID: 1787460409}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -333,6 +487,7 @@ MonoBehaviour:
   SpeedMultiply_Aiming: 0.2
   InvincibilityTime_BeHit: 2
   behitPower: 10
+  gun: {fileID: 3893310722141813943}
 --- !u!114 &3893310720611677318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -473,11 +628,11 @@ MonoBehaviour:
   aimOffset_Center: 0.5
   idleOffset: {x: -0.2, y: 0.3}
   shootFire: {fileID: 1578215566}
-  shootFireShowTime: 0.1
+  shootFireShowTime: 0.05
   shootFireOffset_Center: 1.086
   shootOffset: -0.2
   speed: 0
-  resetPositionTime: 2
+  resetPositionTime: 0.5
 --- !u!1 &3893310720780057323
 GameObject:
   m_ObjectHideFlags: 0
@@ -622,7 +777,7 @@ GameObject:
   - component: {fileID: 1302406550}
   m_Layer: 3
   m_Name: Body2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -753,7 +908,7 @@ GameObject:
   - component: {fileID: 3893310722017721343}
   - component: {fileID: 3893310722017721328}
   m_Layer: 3
-  m_Name: Ammo1
+  m_Name: Ammo_Normal
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -791,7 +946,7 @@ MonoBehaviour:
   ammoReserve_Max: 40
   bulletParent: {fileID: 0}
   bulletPrefab: {fileID: 2884413929125965641, guid: 158f4bbf656579f47ba1a23bd998c137, type: 3}
-  elementType: 0
+  elementType: 3
 --- !u!1 &3893310722141813941
 GameObject:
   m_ObjectHideFlags: 0
@@ -843,12 +998,15 @@ MonoBehaviour:
   Recoil: 3
   ammoList:
   - {fileID: 3893310722017721328}
+  - {fileID: 2066270590}
+  - {fileID: 1787460410}
+  - {fileID: 790233711}
   user: {fileID: 3893310720611677319}
   laserSights: {fileID: 3893310720780057325}
-  jitterAngle_Reset: 5
+  jitterAngle_Reset: 10
   jitterAngle_ResetRandomValue: 2
-  jitterTime_Reset: 0.3
-  jitterTime_ResetRandomValue: 0.15
+  jitterTime_Reset: 0.5
+  jitterTime_ResetRandomValue: 0.2
   sprite: {fileID: 3893310720728673419}
   audio: {fileID: 227990193}
   ammoUI: {fileID: 0}

@@ -1,5 +1,6 @@
 using System;
 using AudioModule;
+using ShootModule.Gun.Bullets;
 using UI;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -49,7 +50,9 @@ namespace ShootModule.Gun.Guns
                ammoUI.SelectAmmo(ammoIndex);
                selectedAmmo = ammoList[ammoIndex];
            }
-               
+           
+           if(Input.GetKeyDown(KeyCode.R))
+               selectedAmmo.Reload();
         }
 
         protected override void Init()
@@ -116,6 +119,8 @@ namespace ShootModule.Gun.Guns
             
             bullet.Init(this);
             bullet.transform.position = transform.position;
+            
+            (bullet as NormalBullet).ifAttckMonter1_Player0 = true;
             bullet.ShootTo(curShootDir);
             sprite.ShowShootFire();
             sprite.ResetTimerAfterShoot();

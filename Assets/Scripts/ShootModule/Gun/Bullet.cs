@@ -13,7 +13,20 @@ namespace ShootModule.Gun
         public DamageInfo.ElementType DamageType;
         protected Gun gun;
         [SerializeField] protected BulletSprite sprite;
-        public ActorMono SourceActor => gun.user;
+        public ActorMono SourceActor
+        {
+            get
+            {
+                if (gun != null)
+                {
+                    return gun.user;
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        } 
 
         public abstract void ShootTo(Vector2 direction);
         public abstract void Init(Gun _gun);

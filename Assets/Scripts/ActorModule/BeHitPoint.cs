@@ -16,14 +16,14 @@ namespace ActorModule
     {
         public DamageInfo.ElementType Element;
         public BehitType Type;
-        public ActorMono actor { private set; get; }
+        public ActorMono actor { set; get; }
 
         [SerializeField] protected AudioController audio;
         [SerializeField] protected BeHitEffect beHitEffectPrefab;
         protected TargetPool<BeHitEffect> beHitEffectPool;
         [SerializeField] protected SpriteRenderer framerRenderer;
 
-        public void Init(ActorMono _actor)
+        public virtual void Init(ActorMono _actor)
         {
             actor = _actor;
         }

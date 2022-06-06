@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using ActorModule.Player;
+using Manager;
+using ShootModule.Gun;
+using ShootModule.Gun.Bullets;
+using Tool;
 using UnityEngine;
 
 namespace ActorModule.Monster
@@ -9,6 +13,13 @@ namespace ActorModule.Monster
     public class MonsterController : MonoBehaviour
     {
         public Vector2 Vel_Debug;
+        
+        [Header("AI设置")] 
+        [SerializeField] private bool ifShoot;
+
+        [SerializeField] private bool ifJump;
+        [SerializeField] private bool ifChase;
+        [SerializeField] private bool ifFall;
         
         [Header("移动检测")]
         [SerializeField] private List<Transform> patrolPositions;
@@ -23,6 +34,16 @@ namespace ActorModule.Monster
         [SerializeField]
         private float damage;
 
+        [Header("射击")]
+        [SerializeField] private Bullet bulletPrefab ;
+        private TargetPool<Bullet> bulletPool;
+        private Transform bulletParent;
+        [SerializeField]private Vector2 shootDir;
+        private float randomDirRange;
+        private float shootTimer;
+        [SerializeField] private float shootCD;
+
+        [Header("受击")]
         private float stiffTime;
         private float beatBackPower;
         private Vector2 beatBackDir;
@@ -56,11 +77,18 @@ namespace ActorModule.Monster
         private void Start()
         {
             monster.OnBeHitEvent += OnBeHitCallBack;
+
+            bulletParent = GameManager.Instance.bulletParent;
+            bulletPool = new TargetPool<Bullet>(bulletPrefab, bulletParent);
         }
 
         private void Update()
         {
             StateUpdate();
+            
+            if(ifShoot)
+                Shoot();
+            
             jumpTimer -= Time.deltaTime;
 
             Vel_Debug = rigidbody.velocity;
@@ -166,7 +194,16 @@ namespace ActorModule.Monster
         {
             if (stiffTime <= 0)
             {
-                ChangeStateTo(MonsterState.Chase);
+                if(ifChase)
+                    ChangeStateTo(MonsterState.Chase);
+                else if(patrolPositions.Count >= 0)
+                {
+                    ChangeStateTo(MonsterState.Patrol);
+                }
+                else
+                {
+                    ChangeStateTo(MonsterState.Idle);
+                }
                 return;
             }
 
@@ -203,7 +240,7 @@ namespace ActorModule.Monster
                     break;
                 }
 
-                if (CheckViewTarget())
+                if (CheckViewTarget() && ifChase)
                 {
                     ChangeStateTo(MonsterState.Chase);
                     patrolTimer = 0;
@@ -262,6 +299,11 @@ namespace ActorModule.Monster
             switch (curState)
             {
                 case MonsterState.Chase:
+                    if (!ifChase)
+                    {
+                        ChangeStateTo(MonsterState.Idle);
+                    }
+
                     break;
                 case MonsterState.Idle:
                     rigidbody.velocity = Vector2.zero;
@@ -329,7 +371,7 @@ namespace ActorModule.Monster
             {
                 if (hit.collider.CompareTag("Ground"))
                 {
-                    if (ifStand)
+                    if (ifStand && ifJump)
                     {
                         Jump(1);
                         return;
@@ -384,17 +426,17 @@ namespace ActorModule.Monster
             }
             
             // 悬崖跳处理
-            if (ifStand && ifWillFall)
+            if (ifStand && ifWillFall && ifFall)
             {
                 if (currentState == MonsterState.Chase)
                 {
                     if(ifCanJumpOverObstacle)
                         return;
                 }
-                Jump(1);
+                if(ifJump)
+                    Jump(1);
                 return;
             }
-            
         }
 
         private void Jump(float multiply)
@@ -414,7 +456,7 @@ namespace ActorModule.Monster
             Idle,
             Patrol,
             Chase,
-            Stiff
+            Stiff,
         }
         #endregion
 
@@ -422,10 +464,14 @@ namespace ActorModule.Monster
 
         private void OnBeHitCallBack(DamageInfo info)
         {
+            if(!ifChase)
+                return;
+
             if(currentState == MonsterState.Idle || 
                currentState== MonsterState.Patrol)
             player_Target = info.sourceActor as PlayerMono;
             ifStopPatrol = true;
+
             ChangeStateTo(MonsterState.Chase);
 
             if (info.beHitPoint.Type == BeHitPoint.BehitType.Weakness || info.ifBeHitWeakElement == 1)
@@ -442,6 +488,27 @@ namespace ActorModule.Monster
         
 
         #endregion
+
+
+      
+        private void Shoot()
+        {
+            shootTimer += Time.deltaTime;
+            if(shootTimer<shootCD)
+                return;
+            else
+            {
+                shootTimer = 0;
+            }
+            
+            var bullet = bulletPool.GetActiveTarget();
+            bullet.gameObject.SetActive(true);
+            (bullet as NormalBullet).ifAttckMonter1_Player0 = false;
+
+            bullet.transform.position = transform.position;
+            bullet.ShootTo(shootDir);
+
+        }
 
         private void OnDrawGizmos()
         {
